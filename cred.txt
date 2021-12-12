@@ -1,7 +1,17 @@
+Free Sql cred:
+**************
+
+thalaking88258@gmail.com
+thalaking88258
+
 Data Base:
+**********
 
 Host: sql6.freesqldatabase.com
 Database name: sql6458223
 Database user: sql6458223
 Database password: wVVHK9HxK4
 Port number: 3306
+
+
+URL Link PHP admin -> https://www.phpmyadmin.co/
