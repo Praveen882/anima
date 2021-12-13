@@ -36,11 +36,11 @@ if (isset($_POST['forgot'])) {
     $mail->SMTPSecure = "tls";
     $mail->Port       = 587;
     $mail->Host       = "smtp.gmail.com";
-    $mail->Username   = "dineshmurugesan7373@gmail.com";
-    $mail->Password   = "lptbhwydxesqdhxp";
+    $mail->Username   = "thalaking88258@gmail.com";
+    $mail->Password   = "lhytxynhjvkozesu";
     $mail->IsHTML(true);
-    $mail->AddAddress($email, "Kathirvel");
-    $mail->SetFrom("dineshmurugesan7373@gmail.com", "Anima! Forgot Password ?");
+    $mail->AddAddress($email, "Anima");
+    $mail->SetFrom("thalaking88258@gmail.com", "Anima! Forgot Password ?");
     //$mail->AddReplyTo("reply-to-email@domain", "Dinesh");
     //$mail->AddCC("cc-recipient-email@domain", "cc-recipient-name");
     $mail->Subject = "Anima - forgot your Password";
@@ -50,7 +50,6 @@ if (isset($_POST['forgot'])) {
     if (!$mail->Send()) {
         echo "<script>alert('Error while sending Email')</script>";
         var_dump($mail);
-        
     } else {
         $updatequery = "UPDATE login SET UserPassword = :userpassword WHERE UserEmail = :useremail";
         $statment = $db->prepare($updatequery);
@@ -74,7 +73,10 @@ if (isset($_POST['forgot'])) {
         Forgot Pin Page
     </h1>
     <form action="" method="post">
-        <input type="email" name="fmail" require>
+        <div class="exp">
+            <p class="and" style="color: blue;">After Successfully send mail check your spam mail box</p>
+        </div>
+        <input type="email" name="fmail" required>
         <button name="forgot">Forgot</button>
     </form>
 </body>
