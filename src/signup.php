@@ -3,28 +3,42 @@
 session_start();
 
 if (isset($_POST['signup'])) {
+
   global $db;
   require('db.php');
 
   $New_Password = $_POST['User_New_Password'];
   $Confirm_Password = $_POST['User_Confirm_Password'];
-  $password;
-
-  if ($New_Password == $Confirm_Password) {
-    $password = $New_Password;
-  } else {
-    $password = null;
-    echo "<script>alert('Password not match')</script>";
-  }
-
   $username = $_POST['User_Name'];
   $email = $_POST['User_Email'];
-  $query = "INSERT INTO login(UserName,UserEmail,UserPassword) VALUES('$username','$email','$password')";
 
-  if ($db-> query($query)) {
-    echo '<script>alert("SignUp Successfully")</script>';
+  $query_username = "SELECT * FROM login WHERE UserName = :username";
+  $query_email = "SELECT * FROM login WHERE UserEmail = :useremail";
+
+  $statmetUsername = $db->prepare($query_username);
+  $statmetEmail = $db->prepare($query_email);
+
+  $statmetUsername->bindvalue(':username', $username);
+  $statmetEmail->bindvalue(':useremail', $email);
+
+  $statmetUsername->execute();
+  $statmetEmail->execute();
+
+  if ($statmetUsername->rowCount() == 1) {
+    echo '<script>alert("User Name already taken")</script>';
+  } else if ($statmetEmail->rowCount() == 1) {
+    echo '<script>alert("Email already taken")</script>';
   } else {
-    echo '<script>alert("Something Wrong")</script>';
+    if ($New_Password == $Confirm_Password) {
+      $query = "INSERT INTO login(UserName,UserEmail,UserPassword) VALUES('$username','$email','$New_Password')";
+      if ($db->query($query)) {
+        echo '<script>alert("SignUp Successfully")</script>';
+      } else {
+        echo '<script>alert("Something Wrong")</script>';
+      }
+    } else {
+      echo "<script>alert('Password not match')</script>";
+    }
   }
 }
 
@@ -33,6 +47,7 @@ if (isset($_POST['signup'])) {
 
 <!DOCTYPE html>
 <html>
+<script src="./script/validateEmail.js"></script>
 <style>
   /*set border to the form*/
 
@@ -127,7 +142,7 @@ if (isset($_POST['signup'])) {
     <h2>Create Account</h2>
   </center>
   <!--Step 1 : Adding HTML-->
-  <form action="" method="post">
+  <form action="" method="post" name="Form">
     <div class="imgcontainer">
       <img src="./img/login.gif" alt="Avatar" class="avatar" />
       <h1>ANIMA</h1>
@@ -141,12 +156,12 @@ if (isset($_POST['signup'])) {
       <input type="text" placeholder="Enter gmail" name="User_Email" required />
 
       <label><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="User_New_Password" required />
+      <input type="password" placeholder="Enter Password" name="User_New_Password" required minlength="8" maxlength="18" />
 
       <label><b>Confirm Password</b></label>
-      <input type="password" placeholder="Enter Confirm Password" name="User_Confirm_Password" required />
+      <input type="password" placeholder="Enter Confirm Password" name="User_Confirm_Password" required minlength="8" maxlength="18" />
 
-      <button type="submit" name="signup">Create Account</button>
+      <button type="submit" name="signup" onclick="ValidateEmail(document.Form.User_Email)">Create Account</button>
       <input type="checkbox" checked="true" /> Remember me
     </div>
   </form>
